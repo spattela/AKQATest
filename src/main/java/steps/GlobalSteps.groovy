@@ -65,7 +65,14 @@ After { scenario ->
         //ignore errors for LI and IP
     }
 
-
+    String s1 = System.getProperty("ScenarioStarted")
+    String s2 = "";
+    if (System.getProperty("ScenarioEnded"))
+        s2 = System.getProperty("ScenarioEnded")
+    else {
+        Calendar cal = Calendar.getInstance();
+        s2 = CalendarUtil.convertDateToDBFormat(cal.getTime());
+    }
 
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date date1 = null;
