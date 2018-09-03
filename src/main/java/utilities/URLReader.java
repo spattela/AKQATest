@@ -53,6 +53,16 @@ public class URLReader {
             }
         }
 
+        Properties prop = new Properties();
+        try {
+            InputStream inputStream = URLReader.class.getClassLoader().getResourceAsStream(fileName);
+            prop.load(inputStream);
+        } catch (IOException ioex) {
+            String err = "Failed to load firefox.properties";
+            LOG.error(err);
+            throw new IllegalStateException(err);
+        }
+
         LOG.info("Navigating to URL " + url);
 
         return url;
