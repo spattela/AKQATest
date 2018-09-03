@@ -62,6 +62,7 @@ public class URLReader {
             LOG.error(err);
             throw new IllegalStateException(err);
         }
+        url = prop.getProperty(product);
 
         LOG.info("Navigating to URL " + url);
 
