@@ -6,10 +6,10 @@ import org.junit.runner.RunWith
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "classpath:features/production",
+        features = "classpath:features/BunningsWishList.feature",
         glue = "classpath:steps",
         tags = "~@wip",
-        plugin = ["html:target/test-cucumber-reports/smoke_tests", "rerun:target/rerun.txt"]
+        plugin = "html:target/test-cucumber-reports/smoke_tests"
 )
 class SmokeTests {
 }
