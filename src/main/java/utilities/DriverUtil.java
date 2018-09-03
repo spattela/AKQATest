@@ -45,67 +45,12 @@ public class DriverUtil {
     public static String browser = System.getProperty("browser");
 
     public static WebDriver createWebDriver() {
-        //backup the report directory for vertical
-
-
-
-        if (System.getProperty("targetHost") == null) {
-            System.setProperty("targetHost", "localHost");
-            targetHost = "localHost";
-        }
-
-        if (System.getProperty("targetHost") != null && System.getProperty("targetHost").equalsIgnoreCase("BrowserStack")) {
-            if (System.getProperty("driverLaunched") != null && System.getProperty("driverLaunched").equalsIgnoreCase("true")) {
-                return driver;
-            }
-        }
-
-        if (targetHost.equalsIgnoreCase("BrowserStack")) {
-            if (System.getProperty("driverLaunched")!=null && System.getProperty("driverLaunched").equalsIgnoreCase("true")){
-                return driver;
-            }
-        }
 
         try {
-            if (System.getenv("bamboo_planName") != null) {
-                killOrphanProcesses();
-            }
-
             setDefaultValues();
-            LOG.info("Starting browser -> " + browser);
-            if (targetHost.equalsIgnoreCase("BrowserStack")) {
-                invokeBrowserStackDriver(browser);
-            } else if (targetHost.equalsIgnoreCase("SauceLab")) {
-                invokeSauceLabsDriver(browser);
+            invokeLocalDriver(browser);
 
-            } else {
-                invokeLocalDriver(browser);
-            }
-            settingImplicitWait();
-            printBrowserInfo();
-
-            if (System.getProperty("ApplicationDateTesting") != null) {
-                try {
-                    DriverUtil.driver.get(URLReader.getURL("ctm.data"));
-//                    CTMDataPage ctmDataPage = new CTMDataPage(DriverUtil.driver);
-//                    ctmDataPage.enterApplicationDate(7);
-//                    ctmDataPage.verifyDateSuccess();
-                } catch (IOException ex) {
-                    ex.printStackTrace(System.out);
-                }
-            }
         } catch (Exception ex) {
-            System.out.println("Exception occurred while starting the browser - > " + ex.getMessage());
-            if (ex.getMessage().toLowerCase().contains("local testing through BrowserStack is not connected")) {
-                System.out.println("Starting the local binary");
-                BrowserStackUtil.startUpBrowserStackLocalTestingBinary();
-            }
-
-            if (ex.getMessage().toLowerCase().contains("chrome failed to start") || ex.getMessage().toLowerCase().contains("chrome not reachable")) {
-                System.out.println("Rebooting the machine");
-                String[] cmd = {"/bin/bash", "-c", "sudo reboot"};
-                LinuxUtil.executeCommandAndPrintOutput(cmd);
-            }
 
             System.out.println("Printing stack trace");
             ex.printStackTrace(System.out);
@@ -116,45 +61,7 @@ public class DriverUtil {
     }
 
 
-    private static void copyFiles(String source, String desti) {
-        //copy car directory to backup directory
-        if (!new File(source).exists()){
-            return;
-        }
-        File srcDir = new File(source);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.HH.mm.ss");
-        String destination = desti + sdf.format(timestamp);
-        File destDir = new File(destination);
-        copyDirs(srcDir, destDir);
-    }
-
-    private static void copyDirs(File srcDir, File destDir) {
-        try {
-            FileUtils.copyDirectory(srcDir, destDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        }
-
-    private static void printBrowserInfo() {
-        Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
-        String browserName = cap.getBrowserName().toLowerCase();
-        String os = cap.getPlatform().toString();
-        String v = (String) ((JavascriptExecutor) driver).executeScript("return navigator.userAgent");
-        LOG.info("Running tests on " + browserName + " - " + v + " and OS is " + os);
-    }
-
     private static void setDefaultValues() {
-
-        if (System.getProperty("mobilePlatform") == null)
-            System.setProperty("mobilePlatform", "");
-
-        if (System.getProperty("mobileBrowser") == null)
-            System.setProperty("mobileBrowser", "");
-
-        if (System.getProperty("browserVersion") == null)
-            System.setProperty("browserVersion", "");
 
         if (targetHost == null) {
             System.setProperty("targetHost", "");
@@ -165,9 +72,6 @@ public class DriverUtil {
             targetEnv = "";
         }
 
-        if (device == null) {
-            device = "";
-        }
 
         if (browser == null) {
             browser = "chrome";
@@ -304,6 +208,7 @@ public class DriverUtil {
                 }
             }
 
+
             System.setProperty("webdriver.chrome.driver", fileLocation);
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--disable-popup-blocking");
@@ -319,13 +224,6 @@ public class DriverUtil {
                 LOG.info("Running chrome in headless manner");
             }
 
-           /* if (SystemUtils.IS_OS_LINUX) {
-                String[] command = {"/bin/sh", "-c", "docker-compose up"};
-                LinuxUtil.executeCommandAndPrintOutput(command);
-            }else if (SystemUtils.IS_OS_WINDOWS) {
-                String command = "powershell docker-compose up -d";
-                WindowsUtil.executeCommandAndPrintOutput(command);
-            }*/
 
             if (System.getenv("bamboo_planName") != null) {
                 try {
@@ -361,13 +259,6 @@ public class DriverUtil {
             backUpDirectories();*/
         destroyWebDriver(driver);
 
-       /* if (SystemUtils.IS_OS_LINUX) {
-            String[] command = {"/bin/sh", "-c", "docker-compose down"};
-            LinuxUtil.executeCommandAndPrintOutput(command);
-        }else if (SystemUtils.IS_OS_WINDOWS) {
-            String command = "powershell docker-compose down";
-            WindowsUtil.executeCommandAndPrintOutput(command);
-        }*/
     }
 
     public static int getResponseCode(String urlString) {
@@ -407,28 +298,6 @@ public class DriverUtil {
         }
     }
 
-    private static void invokeBrowserStackDriver(String browser) {
-        sCaps = BrowserStackUtil.browserStackSetUp(browser);
-        try {
-            driver = new RemoteWebDriver(new URL(BrowserStackUtil.URL), sCaps);
-        } catch (MalformedURLException e) {
-            driver = null;
-            e.printStackTrace();
-        }
-    }
-
-    public static void settingImplicitWait() {
-
-        if (!(System.getProperty("browser").equalsIgnoreCase("safari") || System.getProperty("browser").equalsIgnoreCase("IE")))
-            driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
-
-        //driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-    }
-
-
-    public static WebDriver getDriver() {
-        return driver;
-    }
 
     public static WebDriver destroyWebDriver(WebDriver driver) {
         if (driver != null) {
@@ -471,49 +340,6 @@ public class DriverUtil {
         }
         LOG.debug("Os={} BaseDir={}", System.getProperty("os.name"), baseDir);
         return baseDir;
-    }
-
-    private static FirefoxProfile getFirefoxProfile(Properties ffProps) {
-        FirefoxProfile profile = new FirefoxProfile();
-        File modifyHeaders = new File(getModuleBaseDir() + "/src/main/resources/firefox/" + MODIFY_HEADERS_EXTENSION);
-        try {
-            profile.addExtension(modifyHeaders);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        for (Map.Entry<Object, Object> entry : ffProps.entrySet()) {
-            String key = String.valueOf(entry.getKey());
-            if (key.endsWith(".int")) {
-                String newKey = key.substring(0, key.length() - ".int".length());
-                int value = Integer.valueOf(String.valueOf(entry.getValue()));
-                LOG.debug("Setting firefox profile key/value: {}", newKey);
-                profile.setPreference(newKey, value);
-            } else if (key.endsWith(".boolean")) {
-                String newKey = key.substring(0, key.length() - ".boolean".length());
-                boolean value = Boolean.valueOf(String.valueOf(entry.getValue()));
-                LOG.debug("Setting firefox profile key/value: {}", newKey);
-                profile.setPreference(newKey, value);
-            } else {
-                String value = String.valueOf(entry.getValue());
-                LOG.debug("Setting firefox profile key/value: {}", key);
-                profile.setPreference(key, value);
-            }
-        }
-        return profile;
-    }
-
-    private static Properties loadFirefoxProperties() {
-        Properties ffProps = new Properties();
-        try {
-            InputStream inputStream = DriverUtil.class.getClassLoader().getResourceAsStream(FIREFOX_PROPERTIES);
-            ffProps.load(inputStream);
-            LOG.debug("Successfully loaded [{}]", FIREFOX_PROPERTIES);
-        } catch (IOException ioex) {
-            String err = String.format("Failed to load [%s]", FIREFOX_PROPERTIES);
-            LOG.error(err);
-            throw new IllegalStateException(err);
-        }
-        return ffProps;
     }
 
 

@@ -4,9 +4,6 @@ import org.apache.commons.io.IOUtils;
 
 import java.util.List;
 
-/**
- * Created by ssalunke on 9/03/2016.
- */
 public class LinuxUtil {
 
     //Below method will execute the linux command and return the output of the command
