@@ -22,8 +22,14 @@ Download or clone the project
 
 You can run the tests by the following command i.e 
 
+To run tests on DEV
 ```
-mvn clean install -Dskiptests=true
+mvn clean install -Dskiptests=true -Denv=DEV
+```
+
+To run tests on UAT
+```
+mvn clean install -Dskiptests=true -Denv=UAT
 ```
 ### Break down into end to end tests
 
