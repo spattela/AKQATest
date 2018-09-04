@@ -40,6 +40,7 @@ BunningsWishList.feature
 
 ## Built With
 
+* IDE used Intellij
 * Cucumber framework used for making it usable for business
 * [Maven](https://maven.apache.org/) - Dependency Management
 * groovy scripting for writing the code 
