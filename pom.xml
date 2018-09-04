@@ -117,43 +117,6 @@
             <version>${groovy.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>json-path</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>xml-path</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>json-schema-validator</artifactId>
-            <version>3.1.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.spullara.mustache.java</groupId>
-            <artifactId>compiler</artifactId>
-            <version>0.9.5</version>
-        </dependency>
 
         <dependency>
             <groupId>info.cukes</groupId>
@@ -167,12 +130,6 @@
             <version>${cucumber.version}</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
-        </dependency>
 
         <dependency>
             <groupId>info.cukes</groupId>
@@ -259,12 +216,7 @@
             <version>1.2.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>2.7.0</version>
-            <scope>test</scope>
-        </dependency>
+
 
     </dependencies>
 
@@ -325,26 +277,6 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.4.0</version>
                 <executions>
-                <execution>
-                    <id>start-local-testing-binary</id>
-                    <phase>process-test-resources</phase>
-                    <goals>
-                        <goal>java</goal>
-                    </goals>
-                    <configuration>
-                        <mainClass>testsetup.ProcessStarter</mainClass>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>stop-local-testing-binary</id>
-                    <phase>post-integration-test</phase>
-                    <goals>
-                        <goal>java</goal>
-                    </goals>
-                    <configuration>
-                        <mainClass>testsetup.ProcessKiller</mainClass>
-                    </configuration>
-                </execution>
                 <execution>
                     <phase>post-integration-test</phase>
                     <id>run-cucumter-report-merger</id>

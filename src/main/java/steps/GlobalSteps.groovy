@@ -82,5 +82,5 @@ After { scenario ->
         LOG.info("*****" + scenario.name + " Scenario Passed*****")
     else
         LOG.info("*****" + scenario.name + " Scenario Failed*****")
-
+    DriverUtil.destroyWebDriver()
 }

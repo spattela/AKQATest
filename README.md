@@ -13,9 +13,6 @@ and running on your local machine for development and testing purposes.
 
 This test works on any machine with JAVA installed. JAVA JDK 1.8 would be ideal
 
-```
-Give examples
-```
 
 ### Installing
 
@@ -26,7 +23,7 @@ Download or clone the project
 You can run the tests by the following command i.e 
 
 ```
-mvn test -Denv=DEV -Dtest=runnable/SmokeTests
+mvn clean install -Dskiptests=true
 ```
 ### Break down into end to end tests
 
