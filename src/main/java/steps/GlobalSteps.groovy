@@ -42,24 +42,9 @@ After { scenario ->
         System.out.printf("%n")
         scenario.write("Current time stamp -> " + new Date().toString())
 
-        if (DriverUtil.driver.getCurrentUrl().contains("journey")) {
-            println "\n"
-            transactionID = ((JavascriptExecutor) (DriverUtil.driver)).executeScript("return window.CtMDataLayer.filter(function(item) {return item.event === 'tracktransactionupdate'})[0].transaction.journeyId;")
-            println "\n"
-
-        } else {
-
-            transactionID = ((JavascriptExecutor) (DriverUtil.driver)).executeScript("return meerkat.modules.transactionId.get();")
-            println "\n"
-        }
-
-        scenario.write("\n Transaction Id -> " + transactionID + " \n")
-        println "\n"
-
-        scenario.write("Transaction Id -> " + transactionID)
         String title = DriverUtil.driver.getTitle()
         scenario.write("Title of the page -> " + title)
-        LOG.info("Transaction id and title is " + transactionID + " - " + title)
+
 
     } catch (Exception ex) {
         //ignore errors for LI and IP

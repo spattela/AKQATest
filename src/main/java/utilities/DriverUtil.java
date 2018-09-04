@@ -287,16 +287,6 @@ public class DriverUtil {
            return true;
        }
     }
-    private static void invokeSauceLabsDriver(String browser) {
-        sCaps = SauceLabUtil.sauceLabSetUp(browser);
-
-        try {
-            driver = new ProxyingRemoteWebDriver(new URL(SauceLabUtil.URL), sCaps);
-        } catch (MalformedURLException e) {
-            driver = null;
-            e.printStackTrace();
-        }
-    }
 
 
     public static WebDriver destroyWebDriver(WebDriver driver) {
